@@ -1,17 +1,11 @@
 package com.example.jinkai.avocado.filters;
 
-import java.io.File;
-
+import com.example.jinkai.avocado.models.Image;
 import org.opencv.core.*;
-import org.opencv.imgcodecs.Imgcodecs;
 
 
 public class SolidPaint {
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
-
-    public static Mat loadImage(File imageFile) {
-        return Imgcodecs.imread(imageFile.getAbsolutePath());
-    }
 
     public static Mat applyFilter(Mat image, Rect rect, Scalar color) {
         Mat destImage = new Mat(image.rows(), image.cols(), CvType.CV_8UC3, color);
@@ -19,17 +13,12 @@ public class SolidPaint {
         croppedImage.copyTo(destImage.rowRange(rect.y, rect.y + rect.height).colRange(rect.x, rect.x + rect.width));
         return destImage;
     }
-
-    public static void writeImage(File imageFile, Mat image) {
-        Imgcodecs.imwrite(imageFile.getAbsolutePath(), image);
-    }
 }
 
-class Run {
+class RunSolidPaint {
     public static void main(String[] args) {
         // load the base image
-        File srcImageFile = new File("assets/wallpaper-full-hd.jpg");
-        Mat srcImage = SolidPaint.loadImage(srcImageFile);
+        Mat srcImage = new Image("assets/wallpaper-full-hd.jpg").loadImage();
 
         // prepare a fill-area
         Rect rect = new Rect(366, 537, 1138, 109);
@@ -38,8 +27,8 @@ class Run {
         Scalar color = new Scalar(255, 255, 255);
 
         // write the filtered image
-        File destImageFile = new File("assets/write.jpg");
         Mat destImage = SolidPaint.applyFilter(srcImage, rect, color);
-        SolidPaint.writeImage(destImageFile, destImage);
+        Image destImageFile = new Image("assets/write-solid-paint.jpg");
+        destImageFile.writeImage(destImage);
     }
 }
