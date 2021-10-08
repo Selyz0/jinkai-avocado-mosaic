@@ -7,6 +7,7 @@
 
 # Pic file
 *.png
+*.jpg
 
 # Log file
 *.log
