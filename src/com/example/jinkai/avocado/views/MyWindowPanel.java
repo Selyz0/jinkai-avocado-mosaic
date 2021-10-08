@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.views;
+package com.example.jinkai.avocado.views;
 
 import java.awt.event.MouseEvent;
 import java.awt.Rectangle;

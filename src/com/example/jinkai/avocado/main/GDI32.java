@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.main;
+package com.example.jinkai.avocado.main;
 
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.WinDef.DWORD;

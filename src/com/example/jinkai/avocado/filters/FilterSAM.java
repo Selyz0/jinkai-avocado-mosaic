@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.filters;
+package com.example.jinkai.avocado.filters;
 
 import javax.swing.ImageIcon;
 

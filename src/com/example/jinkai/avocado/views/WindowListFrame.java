@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.views;
+package com.example.jinkai.avocado.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -112,7 +112,7 @@ public class WindowListFrame extends JFrame {
             for (int index = 0; index < panelList.size(); index++){
                 MyWindowPanel p = panelList.get(index);
                 if(p == e.getSource()){
-                    new ApplyFilterFrame(p.getHWND(), "Shared Window Avocado Mosaic (Target: " + p.getTitle() + ")", p.getTitle(), p.getRectangle());
+                    new ApplyFilterFrame(p.getHWND(), "Avocado Safe Sharing", p.getTitle(), p.getRectangle());
                 }
             }
         }

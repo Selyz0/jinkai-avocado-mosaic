@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.main;
+package com.example.jinkai.avocado.main;
 
 import java.awt.Rectangle;
 

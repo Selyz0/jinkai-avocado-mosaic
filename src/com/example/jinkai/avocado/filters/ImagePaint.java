@@ -1,12 +1,9 @@
-package src.com.example.jinkai.avocado.filters;
+package com.example.jinkai.avocado.filters;
 
-import src.com.example.jinkai.avocado.models.MyImage;
+import com.example.jinkai.avocado.models.MyImage;
 import org.opencv.core.*;
 
-
 public class ImagePaint {
-    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
-
     public static Mat applyFilter(Mat srcImage, Rect rect, Mat paintImage) {
         Mat croppedImage = new Mat(srcImage, rect);
         croppedImage.copyTo(paintImage.rowRange(rect.y, rect.y + rect.height).colRange(rect.x, rect.x + rect.width));

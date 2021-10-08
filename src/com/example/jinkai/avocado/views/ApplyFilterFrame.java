@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.views;
+package com.example.jinkai.avocado.views;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -16,26 +16,31 @@ import javax.swing.event.MouseInputAdapter;
 
 import com.sun.jna.platform.win32.WinDef.HWND;
 
-import src.com.example.jinkai.avocado.main.*;
+import com.example.jinkai.avocado.main.*;
+import com.example.jinkai.avocado.filters.*;
 
 class ApplyFilterFrame extends JFrame implements ActionListener {
     final int MAX_FILTER_NUM = 10;
-    public int windowHeight = 1000;
-    public int windowWidth = windowHeight*1920/1080;
+    public int windowHeight;
+    public int windowWidth;
+    float resizeWidth, resizeHeight;
     int x, y;
     // クリック時の座標
     int x0, y0, x1, y1;
     int innerWidth, innerHeight;
+    BufferedImage buf;
+    Image resizedImg;
     ImageIcon img;
     Insets insets;
     FilterFrame fframe;
+    JLabel picLabel;
     JPanel picPanel;
     
     ApplyFilterFrame(HWND hWnd, String title, String targetTitle, Rectangle rect) {
-        fframe = new FilterFrame("Shared Window Avocado Mosaic (Components)");
-        this.windowHeight = fframe.getWindowHeight();
-        this.windowWidth = 1900 - fframe.getWindowWidth();
-        this.x = fframe.getX() + fframe.getWidth() - 10;
+        fframe = new FilterFrame("Avocado Safe Sharing (Components)");
+        this.windowHeight = 1080;
+        this.windowWidth = 1920 - fframe.getWindowWidth();
+        this.x = fframe.getX() + fframe.getWidth() - 15;
         this.y = fframe.getY();
 
         //final int MAX_FILTER_NUM = 10;
@@ -76,11 +81,24 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
         picPanel.setBounds(0, 0, innerWidth, innerHeight);
 
         // 画像ラベル用意
-        JLabel picLabel = new JLabel();
+        picLabel = new JLabel();
         picLabel.setBackground(Color.white);
         picLabel.setBounds(new Rectangle(0, 0, picPanel.getWidth(), picPanel.getHeight()));
+        picLabel.setHorizontalAlignment(JLabel.CENTER);
         img = new ImageIcon(buf);
-        Image resizedImg = img.getImage().getScaledInstance(picLabel.getWidth(), picLabel.getHeight(), Image.SCALE_SMOOTH);
+        if(img.getIconHeight()/img.getIconWidth() > picLabel.getHeight()/picLabel.getWidth()){
+            resizeWidth = picLabel.getWidth();
+            float ratio = (float)picLabel.getWidth()/img.getIconWidth();
+            resizeHeight = img.getIconHeight()*ratio;
+        } else {
+            resizeHeight = picLabel.getHeight();
+            float ratio = (float)picLabel.getHeight()/img.getIconHeight();
+            resizeWidth = img.getIconWidth()*ratio;
+        }
+        System.out.println("resize:" + img.getIconWidth() + ", " + img.getIconHeight());
+        System.out.println("resize:" + picLabel.getWidth() + ", " + picLabel.getHeight());
+        System.out.println("resize:" + resizeWidth + ", " + resizeHeight);
+        resizedImg = img.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(resizedImg);
         picLabel.setIcon(resizedIcon);
 
@@ -106,7 +124,15 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
                     // TODO: ここで加工
 
                     img = new ImageIcon(buf);
-                    Image resizedImg = img.getImage().getScaledInstance(innerWidth, innerHeight, Image.SCALE_SMOOTH);
+                    int resizeWidth, resizeHeight;
+                    if(img.getIconHeight()/img.getIconWidth() > picLabel.getHeight()/picLabel.getWidth()){
+                        resizeWidth = innerWidth;
+                        resizeHeight = img.getIconHeight()*(picLabel.getWidth()/img.getIconWidth());
+                    } else {
+                        resizeHeight = innerHeight;
+                        resizeWidth = img.getIconWidth()*(picLabel.getHeight()/img.getIconHeight());
+                    }
+                    Image resizedImg = img.getImage().getScaledInstance(resizeWidth, resizeHeight, Image.SCALE_SMOOTH);
                     ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
                     //UI更新
@@ -134,8 +160,6 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
         }
 
         public void mouseDragged (MouseEvent me) {
-            System.out.print(me.getX());
-            System.out.print(me.getY());
         }
 
         public void mouseReleased(MouseEvent me) {
@@ -150,7 +174,49 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
 
             FilterButton targetButton = fframe.getEnabledButton();
             if(!(targetButton == null)){
-                targetButton.performAction(img, x0, y0, x1, y1);
+                if(x0 > x1){
+                    int x_tmp = x0;
+                    x0 = x1;
+                    x1 = x_tmp;
+                }
+                if(y0 > y1){
+                    int y_tmp = y0;
+                    y0 = y1;
+                    y1 = y_tmp;
+                }
+
+                x0 -= (picLabel.getWidth()-resizedImg.getWidth(null))/2;
+                x1 -= (picLabel.getWidth()-resizedImg.getWidth(null))/2;
+
+                ImageIcon src = new ImageIcon(resizedImg);
+
+                // ぼかし
+                if(targetButton.getId() == 0){
+                    ImageIcon dstImg = MyFilter.blur(src, x0, y0, x1, y1);
+                    //ImageIcon dstImg = targetButton.performAction();
+                    resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
+                    picLabel.setIcon(resizedIcon);
+                } else if (targetButton.getId() == 1){
+                    System.out.println("fill");
+                    ImageIcon dstImg = MyFilter.fill(src, x0, y0, x1, y1);
+                    //ImageIcon dstImg = targetButton.performAction();
+                    resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
+                    picLabel.setIcon(resizedIcon);
+                } else if (targetButton.getId() == 2){
+                    ImageIcon dstImg = MyFilter.paintImage(src, x0, y0, x1, y1);
+                    //ImageIcon dstImg = targetButton.performAction();
+                    resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
+                    picLabel.setIcon(resizedIcon);
+                } else if (targetButton.getId() == 3){
+                    ImageIcon dstImg = MyFilter.setWipe(img, x0, y0+insets.top+5, x1, y1+insets.top+5);
+                    resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
+                    picLabel.setIcon(resizedIcon);
+                }
+
             }
         }
     }

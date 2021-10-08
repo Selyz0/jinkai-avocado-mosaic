@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.views;
+package com.example.jinkai.avocado.views;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,19 +8,21 @@ import java.awt.Insets;
 import java.util.*;
 import javax.swing.*;
 
-import src.com.example.jinkai.avocado.filters.*;
+import com.example.jinkai.avocado.filters.*;
 
 // TODO: 画像ウィンドウの移動を検出した際に、これを隣に移動する
 public class FilterFrame extends JFrame {
-    final int MAX_FILTER_NUM = 10;
-    public int windowHeight = 1050;
-    public int windowWidth = windowHeight / MAX_FILTER_NUM;
+    final int MAX_FILTER_NUM = 4;
+    public int windowWidth = 100;
+    public int windowHeight = 100*MAX_FILTER_NUM;
     final int padding = 5;
     int x, y;
     int innerWidth, innerHeight;
     Insets insets;
     JPanel filterPanel;
     List<FilterButton> filterButtonList = new ArrayList<FilterButton>();
+    List<FilterSAM> filterMethodList = new ArrayList<FilterSAM>();
+    List<String> buttonPicPath = new ArrayList<String>();
 
     public int getWindowWidth() { return this.windowWidth; }
     public int getWindowHeight() { return this.windowHeight; }
@@ -33,20 +35,25 @@ public class FilterFrame extends JFrame {
             boolean isSelected = filterButton.isSelected();
             if(isSelected) return filterButton;
         }
-
         return null;
     }
 
     public FilterFrame(String title) {
         // 各パラメータ設定
-        this.x = 0;
-        this.y = 10;
+        this.x = -8;
+        this.y = 0;
         setTitle(title);
         setLocation(this.x, this.y);
         setResizable(false);
         setVisible(true);
         setSize(this.windowWidth, this.windowHeight);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // 画像パス設定
+        buttonPicPath.add("assets/mosaic.jpg");
+        buttonPicPath.add("assets/b2.png");
+        buttonPicPath.add("assets/b3.jpg");
+        buttonPicPath.add("assets/b4.png");
 
         // 内側領域の大きさ取得
         insets = getInsets();
@@ -63,6 +70,7 @@ public class FilterFrame extends JFrame {
         // 各フィルターのボタンをセット
         System.out.println("----");
         System.out.println("Window: " + windowWidth + ", " + windowHeight);
+
         for (int index = 0; index < MAX_FILTER_NUM;index++){
             int w = innerWidth - padding*2;
             int h = (innerHeight ) / MAX_FILTER_NUM - padding;
@@ -70,7 +78,7 @@ public class FilterFrame extends JFrame {
             int y = (h + padding)*index + padding/2;
 
             FilterSAM applyFilter = MyFilter::blur;
-            FilterButton fButton = new FilterButton(applyFilter);
+            FilterButton fButton = new FilterButton(index, applyFilter);
             fButton.setBounds(x, y, w, h);
             if(filterButtonList.size() > 0){
                 fButton.setOtherButtons(filterButtonList);
@@ -81,7 +89,7 @@ public class FilterFrame extends JFrame {
             filterPanel.add(fButton);
 
             // 対応するアイコン設定
-            ImageIcon img = new ImageIcon("./src/com/example/jinkai/avocado/assets/wipe.png");
+            ImageIcon img = new ImageIcon(buttonPicPath.get(index));
             Image resizedImg = img.getImage().getScaledInstance(fButton.getWidth(), fButton.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon resizedIcon = new ImageIcon(resizedImg);
             fButton.setIcon(resizedIcon);

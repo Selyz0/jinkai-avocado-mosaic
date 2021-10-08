@@ -1,11 +1,10 @@
-package src.com.example.jinkai.avocado.filters;
+package com.example.jinkai.avocado.filters;
 
-import src.com.example.jinkai.avocado.models.MyImage;
+import com.example.jinkai.avocado.models.MyImage;
 import org.opencv.core.*;
 
 
 public class SolidPaint {
-    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
 
     public static Mat applyFilter(Mat image, Rect rect, Scalar color) {
         Mat destImage = new Mat(image.rows(), image.cols(), CvType.CV_8UC3, color);

@@ -1,6 +1,6 @@
-package src.com.example.jinkai.avocado.views;
+package com.example.jinkai.avocado.views;
 
-import src.com.example.jinkai.avocado.models.MyImage;
+import com.example.jinkai.avocado.models.MyImage;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import javax.imageio.ImageIO;

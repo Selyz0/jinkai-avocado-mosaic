@@ -1,4 +1,4 @@
-package src.com.example.jinkai.avocado.filters;
+package com.example.jinkai.avocado.filters;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.core.*;
@@ -8,11 +8,11 @@ public class Wipe {
     // Compulsory
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
 
-    public static void setWipe() {
+    public static Mat setWipe(Mat src) {
         Imgcodecs imageCodecs = new Imgcodecs();
 
         //Loading image
-        Mat original = imageCodecs.imread("./assets/wallpaper-full-hd.jpg");
+        //Mat original = Imgcodecs.imread("./assets/wallpaper-full-hd.jpg");
 
         //Video capturing
         VideoCapture capture = new VideoCapture(0);
@@ -26,9 +26,11 @@ public class Wipe {
     
         Rect rect = new Rect(1440, 720, 480, 360);
 
-        wipe.copyTo(original.rowRange(rect.y, rect.y + rect.height).colRange(rect.x, rect.x + rect.width));
+        wipe.copyTo(src.rowRange(rect.y, rect.y + rect.height).colRange(rect.x, rect.x + rect.width));
 
         //Writing the image
-        imageCodecs.imwrite("./assets/test_resaved6.png", original);
+        //Imgcodecs.imwrite("./assets/test_resaved6.png", original);
+
+        return src;
     }
 }
