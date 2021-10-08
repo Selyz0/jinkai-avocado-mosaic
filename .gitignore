@@ -5,6 +5,9 @@
 # Compiled class file
 *.class
 
+# Pic file
+*.png
+
 # Log file
 *.log
 
