@@ -28,6 +28,7 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
     // クリック時の座標
     int x0, y0, x1, y1;
     int innerWidth, innerHeight;
+    int appliedButtonId = -1, applied_x0, applied_x1, applied_y0, applied_y1;
     BufferedImage buf;
     Image resizedImg;
     ImageIcon img;
@@ -85,6 +86,7 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
         picLabel.setBackground(Color.white);
         picLabel.setBounds(new Rectangle(0, 0, picPanel.getWidth(), picPanel.getHeight()));
         picLabel.setHorizontalAlignment(JLabel.CENTER);
+
         img = new ImageIcon(buf);
         if(img.getIconHeight()/img.getIconWidth() > picLabel.getHeight()/picLabel.getWidth()){
             resizeWidth = picLabel.getWidth();
@@ -124,20 +126,26 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
                     // TODO: ここで加工
 
                     img = new ImageIcon(buf);
-                    int resizeWidth, resizeHeight;
                     if(img.getIconHeight()/img.getIconWidth() > picLabel.getHeight()/picLabel.getWidth()){
-                        resizeWidth = innerWidth;
-                        resizeHeight = img.getIconHeight()*(picLabel.getWidth()/img.getIconWidth());
+                        resizeWidth = picLabel.getWidth();
+                        float ratio = (float)picLabel.getWidth()/img.getIconWidth();
+                        resizeHeight = img.getIconHeight()*ratio;
                     } else {
-                        resizeHeight = innerHeight;
-                        resizeWidth = img.getIconWidth()*(picLabel.getHeight()/img.getIconHeight());
+                        resizeHeight = picLabel.getHeight();
+                        float ratio = (float)picLabel.getHeight()/img.getIconHeight();
+                        resizeWidth = img.getIconWidth()*ratio;
                     }
-                    Image resizedImg = img.getImage().getScaledInstance(resizeWidth, resizeHeight, Image.SCALE_SMOOTH);
-                    ImageIcon resizedIcon = new ImageIcon(resizedImg);
+                    System.out.println("resize:" + img.getIconWidth() + ", " + img.getIconHeight());
+                    System.out.println("resize:" + picLabel.getWidth() + ", " + picLabel.getHeight());
+                    System.out.println("resize:" + resizeWidth + ", " + resizeHeight);
+                    resizedImg = img.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+                    //ImageIcon resizedIcon = new ImageIcon(resizedImg);
 
                     //UI更新
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
+                            resizedImg = applyFilter(appliedButtonId);
+                            ImageIcon resizedIcon = new ImageIcon(resizedImg);
                             picLabel.setIcon(resizedIcon);
                         }
                     });
@@ -150,12 +158,37 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
                 }
             }
         };
-        //thread.start();
+        thread.start();
+    }
+
+    public Image applyFilter(int buttonId){
+        ImageIcon src = new ImageIcon(resizedImg);
+
+        // ぼかし
+        if(buttonId == 0){
+            ImageIcon dstImg = MyFilter.blur(src, applied_x0, applied_y0, applied_x1, applied_y1);
+            //ImageIcon dstImg = targetButton.performAction();
+            resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+        } else if (buttonId == 1){
+            System.out.println("fill");
+            ImageIcon dstImg = MyFilter.fill(src, applied_x0, applied_y0, applied_x1, applied_y1);
+            //ImageIcon dstImg = targetButton.performAction();
+            resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+        } else if (buttonId == 2){
+            ImageIcon dstImg = MyFilter.paintImage(src, applied_x0, applied_y0, applied_x1, applied_y1);
+            //ImageIcon dstImg = targetButton.performAction();
+            resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+        } else if (buttonId == 3){
+            ImageIcon dstImg = MyFilter.setWipe(img, applied_x0, applied_y0+insets.top+5, applied_x1, applied_y1+insets.top+5);
+            resizedImg = dstImg.getImage().getScaledInstance((int)resizeWidth, (int)resizeHeight, Image.SCALE_SMOOTH);
+        }
+
+        return resizedImg;
     }
 
     class MouseCheck extends MouseInputAdapter {
         public void mousePressed (MouseEvent me) {
-            x0 = me.getX();
+            x0 = me.getX()-(picLabel.getWidth()-resizedImg.getWidth(null))/2;
             y0 = me.getY();
         }
 
@@ -164,16 +197,18 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
 
         public void mouseReleased(MouseEvent me) {
             Graphics go = picPanel.getGraphics();
-            x1 = me.getX();
+            x1 = me.getX()-(picLabel.getWidth()-resizedImg.getWidth(null))/2;
             y1 = me.getY();
             go.setColor(Color.BLUE);
 
             // 始点、終点が必要な処理を記述
             System.out.println(x0 + ", " + y0 + " -> " + x1 + ", " + y1);
-            go.drawOval(x0, y0, x1 - x0, y1 - y0);
+            //go.drawOval(x0, y0, x1 - x0, y1 - y0);
 
             FilterButton targetButton = fframe.getEnabledButton();
             if(!(targetButton == null)){
+                appliedButtonId = targetButton.getId();
+
                 if(x0 > x1){
                     int x_tmp = x0;
                     x0 = x1;
@@ -185,8 +220,8 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
                     y1 = y_tmp;
                 }
 
-                x0 -= (picLabel.getWidth()-resizedImg.getWidth(null))/2;
-                x1 -= (picLabel.getWidth()-resizedImg.getWidth(null))/2;
+                applied_x0 = x0; applied_x1 = x1;
+                applied_y0 = y0; applied_y1 = y1;
 
                 ImageIcon src = new ImageIcon(resizedImg);
 
@@ -216,7 +251,6 @@ class ApplyFilterFrame extends JFrame implements ActionListener {
                     ImageIcon resizedIcon = new ImageIcon(resizedImg);
                     picLabel.setIcon(resizedIcon);
                 }
-
             }
         }
     }
