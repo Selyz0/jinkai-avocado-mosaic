@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.src;
+package src.com.example.jinkai.avocado.views;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,8 +8,10 @@ import java.awt.Insets;
 import java.util.*;
 import javax.swing.*;
 
+import src.com.example.jinkai.avocado.filters.*;
+
 // TODO: 画像ウィンドウの移動を検出した際に、これを隣に移動する
-class FilterFrame extends JFrame {
+public class FilterFrame extends JFrame {
     final int MAX_FILTER_NUM = 10;
     public int windowHeight = 1050;
     public int windowWidth = windowHeight / MAX_FILTER_NUM;
@@ -35,7 +37,7 @@ class FilterFrame extends JFrame {
         return null;
     }
 
-    FilterFrame(String title) {
+    public FilterFrame(String title) {
         // 各パラメータ設定
         this.x = 0;
         this.y = 10;
@@ -67,7 +69,7 @@ class FilterFrame extends JFrame {
             int x = padding;
             int y = (h + padding)*index + padding/2;
 
-            filterSAM applyFilter = MyFilter::blur;
+            FilterSAM applyFilter = MyFilter::blur;
             FilterButton fButton = new FilterButton(applyFilter);
             fButton.setBounds(x, y, w, h);
             if(filterButtonList.size() > 0){
@@ -82,7 +84,7 @@ class FilterFrame extends JFrame {
             ImageIcon img = new ImageIcon("./src/com/example/jinkai/avocado/assets/wipe.png");
             Image resizedImg = img.getImage().getScaledInstance(fButton.getWidth(), fButton.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon resizedIcon = new ImageIcon(resizedImg);
-            //fButton.setIcon(resizedIcon);
+            fButton.setIcon(resizedIcon);
 
             // 自身を有効にしたときに他を無効にするため、他のボタンの情報も持つ
             for (int i = 0; i < index;i++){

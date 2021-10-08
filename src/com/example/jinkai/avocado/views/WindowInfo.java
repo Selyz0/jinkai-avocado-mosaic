@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.src;
+package src.com.example.jinkai.avocado.views;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -13,6 +13,9 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.DesktopWindow;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.WinDef.RECT;
+
+import src.com.example.jinkai.avocado.main.*;
+
 import com.sun.jna.platform.win32.WinDef.HWND;
 
 public class WindowInfo {

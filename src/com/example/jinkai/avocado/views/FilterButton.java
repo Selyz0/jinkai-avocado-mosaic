@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.src;
+package src.com.example.jinkai.avocado.views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,12 +6,14 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.*;
 
-class FilterButton extends JToggleButton implements ActionListener{
+import src.com.example.jinkai.avocado.filters.*;
+
+public class FilterButton extends JToggleButton implements ActionListener{
     // Filterクラスでメソッドをまとめておく
-    filterSAM applyFilter;
+    FilterSAM applyFilter;
     List<FilterButton> otherButtons = new ArrayList<>();
 
-    FilterButton (filterSAM filterMethod) {
+    FilterButton (FilterSAM filterMethod) {
         applyFilter = filterMethod;
         addActionListener(this);
     }

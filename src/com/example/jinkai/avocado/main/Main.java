@@ -1,18 +1,15 @@
-package com.example.jinkai.avocado.src;
+package src.com.example.jinkai.avocado.main;
 
 import java.util.*;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
+
 import com.sun.jna.platform.win32.WinDef.DWORD;
+
+import src.com.example.jinkai.avocado.views.*;
+
 import com.sun.jna.platform.win32.WinGDI;
 
 //import jdk.jpackage.internal.ApplicationLayout;
-
-interface Kernel32 extends Library {
-    Kernel32 INSTANCE = (Kernel32) Native.load("kernel32", Kernel32.class);
-    void Sleep(int dwMilliseconds);
-}
 
 interface WinGDIExtra extends WinGDI {
     public DWORD SRCCOPY = new DWORD(0x00CC0020);
@@ -20,6 +17,9 @@ interface WinGDIExtra extends WinGDI {
 
 public class Main {
     public static void main(String[] args) {
+        String java_dll_path = "./lib/opencv_java453.dll";
+        System.load(java_dll_path);
+
         String title = WindowInfo.getActiveWindowTitle();
         System.out.println(title);
         

@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.src;
+package src.com.example.jinkai.avocado.views;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -15,6 +15,8 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
 import com.sun.jna.platform.win32.WinDef.HWND;
+
+import src.com.example.jinkai.avocado.main.*;
 
 class ApplyFilterFrame extends JFrame implements ActionListener {
     final int MAX_FILTER_NUM = 10;

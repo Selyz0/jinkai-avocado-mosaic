@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.src;
+package src.com.example.jinkai.avocado.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,7 +15,15 @@ import java.util.*;
 
 import javax.swing.*;
 
-class WindowListFrame extends JFrame {
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+
+interface Kernel32 extends Library {
+    Kernel32 INSTANCE = (Kernel32) Native.load("kernel32", Kernel32.class);
+    void Sleep(int dwMilliseconds);
+}
+
+public class WindowListFrame extends JFrame {
     private int width = 1200;
     private int height = 500;
     private int padding = 10;
@@ -34,7 +42,7 @@ class WindowListFrame extends JFrame {
         }
     }
 
-    WindowListFrame(String title, List<MyWindow> windowList) {
+    public WindowListFrame(String title, List<MyWindow> windowList) {
         final int MAX_ROW_NUM = windowList.size() / 2 + windowList.size() % 2;
         this.windowList = windowList;
         calcParameters(MAX_ROW_NUM);
