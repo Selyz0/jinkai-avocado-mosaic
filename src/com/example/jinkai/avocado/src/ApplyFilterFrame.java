@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.main;
+package com.example.jinkai.avocado.src;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
