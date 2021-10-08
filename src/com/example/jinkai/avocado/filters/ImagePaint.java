@@ -1,6 +1,6 @@
-package com.example.jinkai.avocado.filters;
+package src.com.example.jinkai.avocado.filters;
 
-import com.example.jinkai.avocado.models.Image;
+import src.com.example.jinkai.avocado.models.Image;
 import org.opencv.core.*;
 
 
@@ -12,10 +12,8 @@ public class ImagePaint {
         croppedImage.copyTo(paintImage.rowRange(rect.y, rect.y + rect.height).colRange(rect.x, rect.x + rect.width));
         return paintImage;
     }
-}
 
-class RunImagePaint {
-    public static void main(String[] args) {
+    public static Image paint() {
         // load the over-write image
         Mat srcImage = new Image("assets/wallpaper-full-hd.jpg").loadImage();
 
@@ -29,5 +27,7 @@ class RunImagePaint {
         Mat destImage = ImagePaint.applyFilter(srcImage, rect, paintImage);
         Image destImageFile = new Image("assets/write-image-paint.jpg");
         destImageFile.writeImage(destImage);
+
+        return destImageFile;
     }
 }

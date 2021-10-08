@@ -1,6 +1,6 @@
-package com.example.jinkai.avocado.filters;
+package src.com.example.jinkai.avocado.filters;
 
-import com.example.jinkai.avocado.models.Image;
+import src.com.example.jinkai.avocado.models.Image;
 import org.opencv.core.*;
 
 
@@ -13,10 +13,8 @@ public class SolidPaint {
         croppedImage.copyTo(destImage.rowRange(rect.y, rect.y + rect.height).colRange(rect.x, rect.x + rect.width));
         return destImage;
     }
-}
 
-class RunSolidPaint {
-    public static void main(String[] args) {
+    public static Image fill() {
         // load the base image
         Mat srcImage = new Image("assets/wallpaper-full-hd.jpg").loadImage();
 
@@ -30,5 +28,7 @@ class RunSolidPaint {
         Mat destImage = SolidPaint.applyFilter(srcImage, rect, color);
         Image destImageFile = new Image("assets/write-solid-paint.jpg");
         destImageFile.writeImage(destImage);
+
+        return destImageFile;
     }
 }

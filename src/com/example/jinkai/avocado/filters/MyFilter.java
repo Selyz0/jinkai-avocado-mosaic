@@ -17,4 +17,12 @@ public class MyFilter {
     public static void setWipe() {
         Wipe.setWipe();
     }
+
+    public static void paintImage() {
+        ImagePaint.paint();
+    }
+
+    public static void fill() {
+        SolidPaint.fill();
+    }
 }
