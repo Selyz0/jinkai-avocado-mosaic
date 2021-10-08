@@ -1,4 +1,4 @@
-package com.example.jinkai.avocado.models;
+package src.com.example.jinkai.avocado.models;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
