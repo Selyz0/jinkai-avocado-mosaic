@@ -1,6 +1,6 @@
 package src.com.example.jinkai.avocado.filters;
 
-import src.com.example.jinkai.avocado.models.Image;
+import src.com.example.jinkai.avocado.models.MyImage;
 import org.opencv.core.*;
 
 
@@ -13,19 +13,19 @@ public class ImagePaint {
         return paintImage;
     }
 
-    public static Image paint() {
+    public static MyImage paint() {
         // load the over-write image
-        Mat srcImage = new Image("assets/wallpaper-full-hd.jpg").loadImage();
+        Mat srcImage = new MyImage("assets/wallpaper-full-hd.jpg").loadImage();
 
         // prepare a fill-area
         Rect rect = new Rect(366, 537, 1138, 109);
 
         // load the base image
-        Mat paintImage = new Image("assets/wallpaper-full-hd2.jpg").loadImage();
+        Mat paintImage = new MyImage("assets/wallpaper-full-hd2.jpg").loadImage();
 
         // write the filtered image
         Mat destImage = ImagePaint.applyFilter(srcImage, rect, paintImage);
-        Image destImageFile = new Image("assets/write-image-paint.jpg");
+        MyImage destImageFile = new MyImage("assets/write-image-paint.jpg");
         destImageFile.writeImage(destImage);
 
         return destImageFile;

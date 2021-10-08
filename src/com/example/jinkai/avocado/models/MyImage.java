@@ -6,12 +6,12 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 
-public class Image {
+public class MyImage {
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
 
     private final String path;
 
-    public Image(String path) {
+    public MyImage(String path) {
         this.path = new File(path).getAbsolutePath();
     }
 
