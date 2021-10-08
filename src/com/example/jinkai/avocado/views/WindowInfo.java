@@ -86,7 +86,7 @@ public class WindowInfo {
             
             if (!(buf == null)){
                 try{
-                    ImageIO.write(buf, "PNG", new File("./src/com/example/jinkai/avocado/assets/capture.png"));
+                    ImageIO.write(buf, "PNG", new File("./assets/capture.png"));
                 } catch(IOException ie){}
             }
 
